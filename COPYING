@@ -1,3 +1,19 @@
+With the exceptions below, mkimage-profile-embedded is distributed under the
+terms of the GNU General Public License, reproduced below; either version 3 of
+the License, or (at your option) any later version.
+
+Some files in mkimage-profile-embedded contain a different license statement.
+Those files are licensed under the license contained in the file itself.
+
+mkimage-profile-embedded also bundles patch files, which are applied to the
+sources of the various packages. Those patches are not covered by the license
+of mkimage-profile-embedded. Instead, they are covered by the license of the
+software to which the patches are applied. When said software is available
+under multiple licenses, the mkimage-profile-embedded patches are only provided
+under the publicly accessible licenses.
+
+-----------------------------------------------------------------
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 

@@ -37,9 +37,15 @@ include scripts/utils.Makefile
 MPE_MIRROR_TOP_URL := $(call qstrip,$(CONFIG_MPE_MIRROR_TOP_URL))
 MPE_PLATFORM := $(call qstrip,$(CONFIG_MPE_PLATFORM))
 MPE_ARCH := $(call qstrip,$(CONFIG_MPE_ARCH))
-ifneq ($(MPE_ARCH),$(shell uname -m))
+HOST_ARCH := $(shell uname -m)
+ifneq ($(MPE_ARCH),$(HOST_ARCH))
 GLOBAL_TARGET = $(MPE_ARCH)
+ifneq ($(MPE_ARCH),i586)
 GLOBAL_HSH_USE_QEMU = $(MPE_ARCH)
+endif
+ifeq ($(MPE_ARCH),armh)
+GLOBAL_HSH_USE_QEMU = arm
+endif
 endif
 ifeq ($(MPE_PLATFORM),sisyphus)
 MIRROR_URL = $(MPE_MIRROR_TOP_URL)/Sisyphus

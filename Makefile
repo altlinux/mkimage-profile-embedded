@@ -83,4 +83,4 @@ clean:
 
 .PHONY: distclean
 distclean: clean
-	rm -rf "$(CURDIR)/output"
+	rm -rf "$(CURDIR)/output" "$(CURDIR)/include"

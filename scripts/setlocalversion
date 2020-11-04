@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# This scripts adds local version information from the git scm.
+#
+
+usage() {
+	echo "Usage: $0 [srctree]" >&2
+	exit 1
+}
+
+cd "${1:-.}" || usage
+
+# Check for git and a git repo.
+if head=`git rev-parse --verify --short HEAD 2>/dev/null`; then
+
+	atag="`git describe 2>/dev/null`"
+
+	# Show -g<commit> if we have no tag, or just the tag
+	# otherwise.
+	if [ -z "${atag}" ] ; then
+		printf "%s%s" -g ${head}
+	else
+		printf ${atag}
+	fi
+
+	# Update index only on r/w media
+	[ -w . ] && git update-index --refresh --unmerged > /dev/null
+
+	# Check for uncommitted changes
+	if git diff-index --name-only HEAD | grep -v "^scripts/package" \
+	    | read dummy; then
+		printf '%s' -dirty
+	fi
+
+	# All done with git
+	exit
+fi

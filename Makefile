@@ -16,33 +16,65 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-CONFIGDIR = /usr/share/mkimage
+PROJECT = mkimage-profile-embedded
+VERSION = 2020.11
+EXTRAVERSION =
+MPE_CONFIG = .config
 
-include $(CONFIGDIR)/config.mk
+all: build-image pack-image
+.PHONY: all
 
-GLOBAL_TARGET = aarch64
-GLOBAL_HSH_USE_QEMU = aarch64
-GLOBAL_HSH_APT_CONFIG = apt.conf
+include scripts/kconfig.Makefile
+
+MKI_CONFIGDIR = /usr/share/mkimage
+
+include $(MKI_CONFIGDIR)/config.mk
+
+-include $(MPE_CONFIG)
+
+include scripts/utils.Makefile
+
+MPE_MIRROR_TOP_URL := $(call qstrip,$(CONFIG_MPE_MIRROR_TOP_URL))
+MPE_PLATFORM := $(call qstrip,$(CONFIG_MPE_PLATFORM))
+MPE_ARCH := $(call qstrip,$(CONFIG_MPE_ARCH))
+ifneq ($(MPE_ARCH),$(shell uname -m))
+GLOBAL_TARGET = $(MPE_ARCH)
+GLOBAL_HSH_USE_QEMU = $(MPE_ARCH)
+endif
+ifeq ($(MPE_PLATFORM),sisyphus)
+MIRROR_URL = $(MPE_MIRROR_TOP_URL)/Sisyphus
+else
+MIRROR_URL = $(MPE_MIRROR_TOP_URL)/$(MPE_PLATFORM)/branch
+endif
+
+GLOBAL_HSH_APT_CONFIG = output/apt.conf
+SOURCES_LIST = output/sources.list
 IMAGE_PACKAGES = ./packages
 OUTDIR = output/images
 
 MKI_PACK_RESULTS = tar:rootfs.tar
 
-#MIRROR = http://ftp.altlinux.org/pub/distributions/ALTLinux/p9/branch
-MIRROR = http://mirror.yandex.ru/altlinux/p9/branch
+include $(MKI_CONFIGDIR)/targets.mk
 
-include $(CONFIGDIR)/targets.mk
+prepare: $(OUTDIR) $(GLOBAL_HSH_APT_CONFIG)
 
-all: build-image pack-image
+$(OUTDIR):
+	mkdir -p "$(CURDIR)/$(OUTDIR)"
 
-prepare: apt.conf
+$(SOURCES_LIST): $(MPE_CONFIG)
+	echo > $(SOURCES_LIST)
+	echo "rpm $(MIRROR_URL) $(MPE_ARCH) classic" >> $(SOURCES_LIST)
+	echo "rpm $(MIRROR_URL) noarch classic" >> $(SOURCES_LIST)
 
-sources.list:
-	echo > sources.list
-	echo "rpm $(MIRROR) $(GLOBAL_TARGET) classic" >> sources.list
-	echo "rpm $(MIRROR) noarch classic" >> sources.list
+$(GLOBAL_HSH_APT_CONFIG): $(SOURCES_LIST)
+	echo > $(GLOBAL_HSH_APT_CONFIG)
+	echo 'Dir::Etc::SourceParts "/var/empty";' >> $(GLOBAL_HSH_APT_CONFIG)
+	echo 'Dir::Etc::SourceList "$(CURDIR)/$(SOURCES_LIST)";' >> $(GLOBAL_HSH_APT_CONFIG)
 
-apt.conf: sources.list
-	echo > apt.conf
-	echo 'Dir::Etc::SourceParts "/var/empty";' >> apt.conf
-	echo 'Dir::Etc::SourceList "$(CURDIR)/sources.list";' >> apt.conf
+.PHONY: clean
+clean:
+	rm -f "$(CURDIR)/$(OUTDIR)/rootfs.tar"
+
+.PHONY: distclean
+distclean: clean
+	rm -rf "$(CURDIR)/output"

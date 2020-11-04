@@ -1,0 +1,46 @@
+mainmenu "$(PROJECT) $(PROJECTRELEASE)"
+
+choice
+	prompt "Target Architecture"
+	default MPE_TARGET_ARCH_X86_64
+
+config MPE_TARGET_ARCH_i586
+	bool "i586"
+config MPE_TARGET_ARCH_X86_64
+	bool "x86_64"
+config MPE_TARGET_ARCH_AARCH64
+	bool "aarch64"
+config MPE_TARGET_ARCH_ARMH
+	bool "armh"
+
+endchoice
+
+config MPE_ARCH
+	string
+	default "i586"		if MPE_TARGET_ARCH_i586
+	default "x86_64"	if MPE_TARGET_ARCH_X86_64
+	default "aarch64"	if MPE_TARGET_ARCH_AARCH64
+	default "armh"		if MPE_TARGET_ARCH_ARMH
+
+choice
+	prompt "Target ALT Platform"
+	default MPE_TARGET_PLATFORM_P9
+
+config MPE_TARGET_PLATFORM_P8
+	bool "Platform 8"
+config MPE_TARGET_PLATFORM_P9
+	bool "Platform 9"
+config MPE_TARGET_PLATFORM_SISYPHUS
+	bool "Sisyphus"
+
+endchoice
+
+config MPE_PLATFORM
+	string
+	default "p8"		if MPE_TARGET_PLATFORM_P8
+	default "p9"		if MPE_TARGET_PLATFORM_P9
+	default "sisyphus"	if MPE_TARGET_PLATFORM_SISYPHUS
+
+config MPE_MIRROR_TOP_URL
+	string "ALT Repository URL"
+	default "http://mirror.yandex.ru/altlinux"

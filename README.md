@@ -3,7 +3,7 @@ mkimage profile for embedded solutions
 
 ## Prepare for using with special architectures
 ```sh
-# apt-get install mkimage qemu-user-static-binfmt-$ARCH
+# apt-get install gcc flex mkimage qemu-user-static-binfmt-$ARCH
 ```
 where ARCH is one of valid maintained architectures:
 * ppc
@@ -14,5 +14,6 @@ where ARCH is one of valid maintained architectures:
 ## Using
 For using just run:
 ```sh
+$ make menuconfig
 $ make
 ```

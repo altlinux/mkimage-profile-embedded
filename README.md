@@ -6,9 +6,7 @@ mkimage profile for embedded solutions
 # apt-get install mkimage qemu-user-static-binfmt-$ARCH
 ```
 where ARCH is one of valid maintained architectures:
-* i585
-* x86_64
-* ppc66le
+* ppc
 * armh
 * aarch64
 

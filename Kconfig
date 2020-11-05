@@ -12,6 +12,8 @@ config MPE_TARGET_ARCH_AARCH64
 	bool "aarch64"
 config MPE_TARGET_ARCH_ARMH
 	bool "armh"
+config MPE_TARGET_ARCH_PPC64LE
+	bool "ppc64le"
 
 endchoice
 
@@ -21,6 +23,7 @@ config MPE_ARCH
 	default "x86_64"	if MPE_TARGET_ARCH_X86_64
 	default "aarch64"	if MPE_TARGET_ARCH_AARCH64
 	default "armh"		if MPE_TARGET_ARCH_ARMH
+	default "ppc64le"	if MPE_TARGET_ARCH_PPC64LE
 
 choice
 	prompt "Target ALT Platform"

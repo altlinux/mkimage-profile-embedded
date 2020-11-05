@@ -46,6 +46,9 @@ endif
 ifeq ($(MPE_ARCH),armh)
 GLOBAL_HSH_USE_QEMU = arm
 endif
+ifeq ($(MPE_ARCH),ppc64le)
+GLOBAL_HSH_USE_QEMU = ppc
+endif
 endif
 ifeq ($(MPE_PLATFORM),sisyphus)
 MIRROR_URL = $(MPE_MIRROR_TOP_URL)/Sisyphus
